@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>BloxShop</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;900&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Nunito',sans-serif;background:#1a1c2e;color:#fff;min-height:100vh;}
+
+/* NAV */
+nav{display:flex;align-items:center;justify-content:space-between;padding:14px 28px;background:#13152a;border-bottom:2px solid #2e3260;position:sticky;top:0;z-index:50;}
+.logo{display:flex;align-items:center;font-size:24px;font-weight:900;color:#fff;letter-spacing:1px;gap:0;}
+.logo svg{display:block;}
+.coins-badge{display:flex;align-items:center;gap:8px;background:#2e3260;border-radius:20px;padding:6px 16px;font-size:15px;font-weight:700;color:#f7c948;}
+.coins-icon{width:22px;height:22px;background:#f7c948;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#1a1c2e;font-size:12px;font-weight:900;}
+
+/* HERO */
+.hero{text-align:center;padding:32px 20px 14px;}
+.hero-title{display:flex;align-items:center;justify-content:center;font-size:52px;font-weight:900;color:#f7c948;margin-bottom:8px;}
+.hero p{color:#9fa3c8;font-size:15px;}
+
+/* TABS */
+.tabs{display:flex;gap:8px;justify-content:center;margin:16px 0;flex-wrap:wrap;padding:0 20px;}
+.tab{padding:7px 18px;border-radius:20px;border:1.5px solid #2e3260;font-size:13px;font-weight:700;cursor:pointer;background:transparent;color:#9fa3c8;transition:all .15s;font-family:'Nunito',sans-serif;}
+.tab.active,.tab:hover{background:#f7c948;border-color:#f7c948;color:#1a1c2e;}
+
+/* GRID */
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;padding:0 20px 24px;}
+.card{background:#23274a;border-radius:14px;border:1.5px solid #2e3260;overflow:hidden;cursor:pointer;transition:transform .12s,border-color .12s;}
+.card:hover{transform:translateY(-3px);border-color:#f7c948;}
+.card-img{height:100px;display:flex;align-items:center;justify-content:center;font-size:50px;background:#1a1c2e;}
+.card-body{padding:10px 12px;}
+.card-name{font-size:13px;font-weight:700;color:#fff;margin-bottom:4px;}
+.tag{display:inline-block;font-size:10px;font-weight:700;padding:2px 7px;border-radius:8px;margin-bottom:6px;}
+.tag-common{background:#0f2e1a;color:#4ade80;}
+.tag-rare{background:#3d1a6e;color:#c084fc;}
+.tag-epic{background:#3d1a1a;color:#f87171;}
+.tag-limited{background:#3d2f00;color:#f7c948;}
+.tag-godly{background:linear-gradient(90deg,#7c3aed,#db2777);color:#fff;}
+.price{display:flex;align-items:center;gap:5px;font-size:13px;font-weight:700;color:#f7c948;margin-bottom:4px;}
+.price-inr{font-size:11px;color:#9fa3c8;margin-bottom:6px;}
+.buy-btn{width:100%;padding:7px;border-radius:8px;background:#f7c948;border:none;color:#1a1c2e;font-family:'Nunito',sans-serif;font-size:12px;font-weight:700;cursor:pointer;transition:background .12s;}
+.buy-btn:hover{background:#ffe570;}
+.buy-btn:disabled{background:#444;color:#888;cursor:not-allowed;}
+.buy-btn.free{background:#4ade80;color:#0f2e1a;}
+.buy-btn.free:hover{background:#86efac;}
+
+/* SUMMON SECTION */
+.summon-section{padding:24px 20px 32px;}
+.summon-title{font-size:22px;font-weight:900;text-align:center;letter-spacing:2px;color:#f7c948;text-transform:uppercase;margin-bottom:20px;text-shadow:0 0 18px rgba(247,201,72,0.4);}
+.event-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;}
+.event-card{background:#23274a;border-radius:14px;border:1.5px solid #2e3260;padding:16px;text-align:center;transition:transform .12s,border-color .12s;}
+.event-card:hover{transform:translateY(-3px);}
+.event-card.godly-card{border-color:#db2777;box-shadow:0 0 18px rgba(219,39,119,0.25);}
+.event-icon{font-size:40px;margin-bottom:10px;}
+.event-name{font-size:15px;font-weight:900;color:#fff;margin-bottom:6px;}
+.event-desc{font-size:11px;color:#9fa3c8;margin-bottom:10px;line-height:1.5;}
+.event-price{font-size:13px;font-weight:700;color:#f7c948;margin-bottom:10px;}
+.lucky-badge{display:inline-block;background:#1a3a1a;color:#4ade80;font-size:10px;font-weight:700;padding:2px 8px;border-radius:8px;margin-bottom:8px;}
+
+/* LOGIN SCREEN */
+#loginScreen{position:fixed;inset:0;background:#1a1c2e;z-index:1000;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;}
+.login-box{background:#13152a;border:2px solid #2e3260;border-radius:20px;padding:32px 28px;width:100%;max-width:400px;text-align:center;}
+.login-logo{display:flex;align-items:center;justify-content:center;font-size:32px;font-weight:900;color:#f7c948;margin-bottom:6px;}
+.login-sub{color:#9fa3c8;font-size:13px;margin-bottom:28px;}
+.login-label{font-size:13px;font-weight:700;color:#9fa3c8;text-align:left;display:block;margin-bottom:6px;}
+.login-select{width:100%;padding:10px 14px;background:#23274a;border:1.5px solid #2e3260;border-radius:10px;color:#fff;font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;margin-bottom:14px;cursor:pointer;appearance:none;-webkit-appearance:none;}
+.login-select:focus{outline:none;border-color:#f7c948;}
+.login-input{width:100%;padding:10px 14px;background:#23274a;border:1.5px solid #2e3260;border-radius:10px;color:#fff;font-family:'Nunito',sans-serif;font-size:14px;margin-bottom:6px;}
+.login-input:focus{outline:none;border-color:#f7c948;}
+.login-btn{width:100%;padding:12px;border-radius:12px;background:#f7c948;border:none;color:#1a1c2e;font-family:'Nunito',sans-serif;font-size:15px;font-weight:900;cursor:pointer;transition:background .12s;letter-spacing:.5px;}
+.login-btn:hover{background:#ffe570;}
+.login-err{color:#f87171;font-size:12px;font-weight:700;margin-top:10px;display:none;}
+.login-creds{margin-top:22px;background:#23274a;border-radius:12px;padding:14px 16px;text-align:left;}
+.login-creds p{font-size:12px;color:#9fa3c8;font-weight:700;margin-bottom:8px;}
+.cred-row{display:flex;justify-content:space-between;font-size:12px;padding:4px 0;border-bottom:1px solid #2e3260;}
+.cred-row:last-child{border-bottom:none;}
+.cred-user{color:#f7c948;font-weight:700;}
+.cred-pass{color:#c084fc;font-weight:700;}
+/* Welcome overlay */
+#welcomeOverlay{position:fixed;inset:0;background:rgba(0,0,0,0.88);z-index:2000;display:none;flex-direction:column;align-items:center;justify-content:center;text-align:center;}
+#welcomeOverlay.show{display:flex;}
+.welcome-box{animation:popIn .35s cubic-bezier(.175,.885,.32,1.275);}
+@keyframes popIn{from{transform:scale(0.7);opacity:0;}to{transform:scale(1);opacity:1;}}
+.welcome-name{font-size:42px;font-weight:900;color:#f7c948;margin-bottom:8px;}
+.welcome-sub{font-size:16px;color:#9fa3c8;}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);padding:10px 22px;border-radius:20px;font-weight:700;font-size:14px;display:none;z-index:999;white-space:nowrap;}
+
+/* FOOTER */
+footer{text-align:center;padding:20px;color:#3a3d5c;font-size:12px;border-top:1px solid #2e3260;}
+</style>
+</head>
+<body>
+
+<!-- WELCOME FLASH OVERLAY -->
+<div id="welcomeOverlay">
+  <div class="welcome-box">
+    <div style="font-size:64px;margin-bottom:12px;" id="welcomeEmoji">👋</div>
+    <div class="welcome-name" id="welcomeName"></div>
+    <div class="welcome-sub" id="welcomeSub"></div>
+  </div>
+</div>
+
+<!-- LOGIN SCREEN -->
+<div id="loginScreen">
+  <div class="login-box">
+    <div class="login-logo">
+      BL
+      <svg width="34" height="40" viewBox="0 0 34 40" xmlns="http://www.w3.org/2000/svg">
+        <text x="17" y="33" text-anchor="middle" font-family="Nunito,sans-serif" font-weight="900" font-size="38" fill="#f7c948">O</text>
+        <rect x="3" y="6" width="10" height="7" rx="2.5" fill="none" stroke="#fff" stroke-width="1.8"/>
+        <rect x="21" y="6" width="10" height="7" rx="2.5" fill="none" stroke="#fff" stroke-width="1.8"/>
+        <line x1="13" y1="9.5" x2="21" y2="9.5" stroke="#fff" stroke-width="1.8"/>
+        <line x1="1" y1="9.5" x2="3" y2="9.5" stroke="#fff" stroke-width="1.8"/>
+        <line x1="31" y1="9.5" x2="33" y2="9.5" stroke="#fff" stroke-width="1.8"/>
+      </svg>
+      XSHOP
+    </div>
+    <div class="login-sub">Welcome! Please log in to continue.</div>
+
+    <label class="login-label">Select your account</label>
+    <select class="login-select" id="loginUser" onchange="updateHint()">
+      <option value="">— Choose user —</option>
+      <option value="Shivansh">Shivansh</option>
+      <option value="Sanskar">Sanskar</option>
+      <option value="Kshitiz">Kshitiz</option>
+    </select>
+
+    <label class="login-label">Password</label>
+    <input class="login-input" type="text" id="loginPass" placeholder="Enter your password..." onkeydown="if(event.key==='Enter')doLogin()"/>
+
+    <button class="login-btn" onclick="doLogin()">Log In →</button>
+    <div class="login-err" id="loginErr">❌ Wrong password. Try again!</div>
+  </div>
+</div>
+
+<nav>
+  <div class="logo">
+    BL
+    <svg width="22" height="28" viewBox="0 0 22 28" xmlns="http://www.w3.org/2000/svg">
+      <text x="11" y="22" text-anchor="middle" font-family="Nunito,sans-serif" font-weight="900" font-size="26" fill="white">O</text>
+      <rect x="3" y="5" width="6" height="4" rx="1.5" fill="none" stroke="#f7c948" stroke-width="1.5"/>
+      <rect x="13" y="5" width="6" height="4" rx="1.5" fill="none" stroke="#f7c948" stroke-width="1.5"/>
+      <line x1="9" y1="7" x2="13" y2="7" stroke="#f7c948" stroke-width="1.5"/>
+      <line x1="1.5" y1="7" x2="3" y2="7" stroke="#f7c948" stroke-width="1.5"/>
+      <line x1="19" y1="7" x2="20.5" y2="7" stroke="#f7c948" stroke-width="1.5"/>
+    </svg>
+    XSHOP
+  </div>
+  <div style="display:flex;align-items:center;gap:10px;position:relative;">
+    <!-- NOTIFICATION BELL (SVG icon) -->
+    <div style="position:relative;">
+      <button id="bellBtn" onclick="toggleNotifications()" style="background:#23274a;border:1.5px solid #2e3260;border-radius:50%;width:40px;height:40px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:border-color .15s;" title="Notifications">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6V11c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z" fill="#9fa3c8"/>
+        </svg>
+      </button>
+      <span id="notifBadge" style="display:none;position:absolute;top:-4px;right:-4px;background:#f87171;color:#fff;font-size:10px;font-weight:900;border-radius:50%;width:18px;height:18px;align-items:center;justify-content:center;font-family:'Nunito',sans-serif;">0</span>
+      <!-- DROPDOWN PANEL -->
+      <div id="notifPanel" style="display:none;position:absolute;top:50px;right:0;width:300px;background:#13152a;border:1.5px solid #2e3260;border-radius:14px;box-shadow:0 8px 32px rgba(0,0,0,0.5);z-index:200;overflow:hidden;">
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid #2e3260;">
+          <span style="font-size:13px;font-weight:900;color:#fff;">Purchase Feed</span>
+          <button onclick="clearNotifications()" style="background:none;border:none;color:#9fa3c8;font-size:11px;font-weight:700;cursor:pointer;font-family:'Nunito',sans-serif;">Clear all</button>
+        </div>
+        <div id="notifList" style="max-height:320px;overflow-y:auto;">
+          <div id="notifEmpty" style="padding:24px;text-align:center;color:#3a3d5c;font-size:13px;">No purchases yet</div>
+        </div>
+      </div>
+    </div>
+    <div class="coins-badge">
+      <div class="coins-icon">B</div>
+      <span id="coinCount">40</span> BloxCoins
+    </div>
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="hero-title">
+    BL
+    <svg width="44" height="56" viewBox="0 0 44 56" xmlns="http://www.w3.org/2000/svg">
+      <text x="22" y="46" text-anchor="middle" font-family="Nunito,sans-serif" font-weight="900" font-size="52" fill="#f7c948">O</text>
+      <rect x="5" y="9" width="13" height="9" rx="3" fill="none" stroke="#fff" stroke-width="2.2"/>
+      <rect x="26" y="9" width="13" height="9" rx="3" fill="none" stroke="#fff" stroke-width="2.2"/>
+      <line x1="18" y1="13.5" x2="26" y2="13.5" stroke="#fff" stroke-width="2.2"/>
+      <line x1="2" y1="13.5" x2="5" y2="13.5" stroke="#fff" stroke-width="2.2"/>
+      <line x1="39" y1="13.5" x2="42" y2="13.5" stroke="#fff" stroke-width="2.2"/>
+    </svg>
+    XSHOP
+  </div>
+  <p>The #1 shop for Roblox gear, accessories &amp; exclusive drops</p>
+</div>
+
+<div class="tabs">
+  <button class="tab active" onclick="filterItems('all',this)">All Items</button>
+  <button class="tab" onclick="filterItems('stationery',this)">Stationery</button>
+  <button class="tab" onclick="filterItems('pack',this)">Packs</button>
+  <button class="tab" onclick="filterItems('gear',this)">Gear</button>
+</div>
+
+<div class="grid" id="itemGrid"></div>
+
+<!-- SUMMON SECTION -->
+<div class="summon-section">
+  <div class="summon-title">⚡ SUMMON EVENT YOURSELF ⚡</div>
+  <div class="event-grid" id="eventGrid"></div>
+</div>
+
+<!-- ADMIN SECTION above footer -->
+<div style="background:#13152a;border-top:2px solid #2e3260;padding:24px 20px;text-align:center;">
+  <button id="adminBtn" onclick="toggleAdminPanel()" style="background:#23274a;border:1.5px solid #2e3260;color:#9fa3c8;font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;padding:9px 24px;border-radius:20px;cursor:pointer;transition:all .15s;">🔐 Admin</button>
+
+  <div id="adminPanel" style="display:none;max-width:380px;margin:18px auto 0;background:#23274a;border:1.5px solid #2e3260;border-radius:14px;padding:20px 20px 16px;">
+    <div id="adminLockSection">
+      <p style="font-size:13px;color:#9fa3c8;margin-bottom:10px;">Enter Admin Password to continue:</p>
+      <input type="text" id="adminPass" placeholder="Enter password..." style="width:100%;padding:9px 12px;background:#1a1c2e;border:1.5px solid #2e3260;border-radius:8px;color:#fff;font-family:'Nunito',sans-serif;font-size:14px;margin-bottom:10px;" onkeydown="if(event.key==='Enter')checkAdmin()"/>
+      <button onclick="checkAdmin()" style="width:100%;padding:9px;border-radius:8px;background:#f7c948;border:none;color:#1a1c2e;font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;cursor:pointer;">Unlock</button>
+      <div id="wrongPass" style="display:none;color:#f87171;font-size:12px;font-weight:700;margin-top:8px;">❌ Incorrect password. Try again.</div>
+    </div>
+    <div id="adminAward" style="display:none;">
+      <p style="font-size:13px;color:#4ade80;font-weight:700;margin-bottom:12px;">✅ Admin Unlocked — Award Coins</p>
+      <label style="font-size:12px;color:#9fa3c8;display:block;margin-bottom:4px;">Player Name</label>
+      <input type="text" id="playerName" placeholder="e.g. CoolPlayer123" style="width:100%;padding:9px 12px;background:#1a1c2e;border:1.5px solid #2e3260;border-radius:8px;color:#fff;font-family:'Nunito',sans-serif;font-size:14px;margin-bottom:10px;"/>
+      <label style="font-size:12px;color:#9fa3c8;display:block;margin-bottom:4px;">BloxCoins to Award</label>
+      <input type="number" id="awardAmount" placeholder="e.g. 500" min="1" style="width:100%;padding:9px 12px;background:#1a1c2e;border:1.5px solid #2e3260;border-radius:8px;color:#fff;font-family:'Nunito',sans-serif;font-size:14px;margin-bottom:12px;"/>
+      <button onclick="awardCoins()" style="width:100%;padding:9px;border-radius:8px;background:#f7c948;border:none;color:#1a1c2e;font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;cursor:pointer;">✅ Award Coins</button>
+    </div>
+  </div>
+</div>
+
+<footer>bloxshop.com &nbsp;·&nbsp; BloxGang &nbsp;·&nbsp; All rights reserved</footer>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ── CONSTANTS ──────────────────────────────────────────
+const ADMIN_PASSWORD = "LambaG@123";
+const DEFAULT_COINS  = 40;
+const users = {
+  'Shivansh': 'Bloxgang003',
+  'Sanskar':  'Bloxgang005',
+  'Kshitiz':  'bloxgang002',
+};
+
+// ── STATE ──────────────────────────────────────────────
+let currentUser  = null;
+let coins        = DEFAULT_COINS;
+let isLeader     = false;
+let current      = 'all';
+let unreadCount  = 0;
+
+// ── PERSISTENCE ────────────────────────────────────────
+function saveKey(user)  { return 'bloxshop_coins_'  + user.toLowerCase(); }
+
+function loadCoins(user) {
+  const saved = localStorage.getItem(saveKey(user));
+  if (saved === null) { localStorage.setItem(saveKey(user), DEFAULT_COINS); return DEFAULT_COINS; }
+  return parseInt(saved, 10);
+}
+function persistCoins() {
+  if (currentUser) localStorage.setItem(saveKey(currentUser), coins);
+}
+
+// ── NOTIFICATIONS (shared across ALL users) ────────────
+function notifKey() { return 'bloxshop_notifs'; }  // single shared key
+
+function loadNotifs() {
+  try { return JSON.parse(localStorage.getItem(notifKey()) || '[]'); } catch(e) { return []; }
+}
+function saveNotifs(arr) {
+  localStorage.setItem(notifKey(), JSON.stringify(arr));
+}
+
+function addNotif(user, itemName, itemEmoji, cost) {
+  const notifs = loadNotifs();
+  const entry = {
+    user, itemName, itemEmoji, cost,
+    time: Date.now(),
+    timeStr: new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit', second:'2-digit'})
+  };
+  notifs.unshift(entry);
+  if (notifs.length > 50) notifs.pop();
+  saveNotifs(notifs);
+  unreadCount++;
+  renderNotifBadge();
+  renderNotifList();
+}
+
+let lastNotifCount = 0; // track count to detect new ones from other users
+
+function pollNotifs() {
+  const notifs = loadNotifs();
+  if (notifs.length > lastNotifCount) {
+    const newOnes = notifs.length - lastNotifCount;
+    // only bump unread if the panel is closed and the newest entry is NOT by current user
+    const panel = document.getElementById('notifPanel');
+    if (panel.style.display === 'none') {
+      // count truly foreign new purchases
+      const foreign = notifs.slice(0, newOnes).filter(n => n.user !== currentUser);
+      if (foreign.length > 0) {
+        unreadCount += foreign.length;
+        renderNotifBadge();
+      }
+    }
+    lastNotifCount = notifs.length;
+    renderNotifList();
+  }
+}
+
+function renderNotifBadge() {
+  const badge = document.getElementById('notifBadge');
+  if (unreadCount > 0) {
+    badge.style.display = 'flex';
+    badge.textContent = unreadCount > 9 ? '9+' : unreadCount;
+  } else {
+    badge.style.display = 'none';
+  }
+}
+
+function renderNotifList() {
+  const list   = document.getElementById('notifList');
+  const empty  = document.getElementById('notifEmpty');
+  const notifs = loadNotifs();
+  lastNotifCount = notifs.length;
+  if (notifs.length === 0) {
+    empty.style.display = 'block';
+    list.querySelectorAll('.notif-row').forEach(r => r.remove());
+    return;
+  }
+  empty.style.display = 'none';
+  list.querySelectorAll('.notif-row').forEach(r => r.remove());
+  notifs.forEach(n => {
+    const isMe = n.user === currentUser;
+    const row  = document.createElement('div');
+    row.className = 'notif-row';
+    row.style.cssText = `display:flex;align-items:flex-start;gap:10px;padding:10px 14px;border-bottom:1px solid #2e3260;background:${isMe ? 'rgba(247,201,72,0.04)' : 'transparent'};`;
+    row.innerHTML = `
+      <div style="font-size:22px;flex-shrink:0;margin-top:2px;">${n.itemEmoji}</div>
+      <div style="flex:1;min-width:0;">
+        <div style="font-size:12px;font-weight:700;color:#fff;line-height:1.4;">
+          <span style="color:${isMe ? '#f7c948' : '#4ade80'};">${n.user}</span>
+          ${isMe ? '(you)' : ''}
+          bought <span style="color:#c084fc;">${n.itemName}</span>
+        </div>
+        <div style="font-size:11px;color:#9fa3c8;margin-top:2px;">B ${n.cost.toLocaleString()} · ${n.timeStr}</div>
+      </div>`;
+    list.appendChild(row);
+  });
+}
+
+function toggleNotifications() {
+  const panel = document.getElementById('notifPanel');
+  const open  = panel.style.display === 'block';
+  panel.style.display = open ? 'none' : 'block';
+  if (!open) {
+    unreadCount = 0;
+    renderNotifBadge();
+    renderNotifList();
+  }
+}
+
+function clearNotifications() {
+  saveNotifs([]);
+  lastNotifCount = 0;
+  unreadCount    = 0;
+  renderNotifBadge();
+  renderNotifList();
+}
+
+// Close panel on outside click
+document.addEventListener('click', function(e) {
+  const panel = document.getElementById('notifPanel');
+  const bell  = document.getElementById('bellBtn');
+  if (panel && !panel.contains(e.target) && !bell.contains(e.target)) {
+    panel.style.display = 'none';
+  }
+});
+
+// Poll every 1 second so notifications from other users show up live
+setInterval(pollNotifs, 1000);
+
+// ── ITEMS ──────────────────────────────────────────────
+const shopItems = [
+  { name:"Pencil",       emoji:"✏️",  price:50,    inrPrice:null,  tag:"common", category:"stationery" },
+  { name:"Pen",          emoji:"🖊️",  price:55,    inrPrice:"₹10", tag:"common", category:"stationery" },
+  { name:"Canteen Pack", emoji:"🎒",  price:12000, inrPrice:null,  tag:"epic",   category:"pack"        },
+];
+
+// ── EVENTS ─────────────────────────────────────────────
+const events = [
+  { id:"gangfight",    name:"Gang Fight",     emoji:"⚔️", rarity:"Godly", memberPrice:120000, leaderFree:true,  lucky:false, luckyChance:"",    desc:"Summon an all-out gang war! Godly rarity event." },
+  { id:"gamechallenge",name:"Game Challenge", emoji:"🎮", rarity:"Rare",  memberPrice:15000,  leaderFree:false, lucky:false, luckyChance:"",    desc:"Challenge the gang to an epic in-game contest." },
+  { id:"randomevent",  name:"Random Event",   emoji:"🎲", rarity:"Epic",  memberPrice:13000,  leaderFree:false, lucky:true,  luckyChance:"45%", desc:"Spin the wheel of fate! Big Event possible." },
+];
+
+// ── RENDER SHOP ────────────────────────────────────────
+function renderItems() {
+  const grid = document.getElementById('itemGrid');
+  const filtered = current === 'all' ? shopItems : shopItems.filter(i => i.category === current);
+  grid.innerHTML = filtered.map(item => `
+    <div class="card">
+      <div class="card-img">${item.emoji}</div>
+      <div class="card-body">
+        <div class="card-name">${item.name}</div>
+        <span class="tag tag-${item.tag}">${item.tag.charAt(0).toUpperCase()+item.tag.slice(1)}</span>
+        <div class="price"><span style="font-size:11px">B</span> ${item.price.toLocaleString()}</div>
+        ${item.inrPrice ? `<div class="price-inr">${item.inrPrice}</div>` : ''}
+        <button class="buy-btn" onclick="buyItem('${item.name}','${item.emoji}',${item.price})">Buy Now</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ── RENDER EVENTS ──────────────────────────────────────
+function renderEvents() {
+  const grid = document.getElementById('eventGrid');
+  grid.innerHTML = events.map(ev => {
+    const isFree   = ev.leaderFree && isLeader;
+    const priceStr = isFree ? 'FREE (Leader)' : `B ${ev.memberPrice.toLocaleString()}`;
+    const btnClass = isFree ? 'buy-btn free' : 'buy-btn';
+    const cost     = isFree ? 0 : ev.memberPrice;
+    const rClass   = ev.rarity==='Godly' ? 'tag-godly' : ev.rarity==='Epic' ? 'tag-epic' : 'tag-rare';
+    return `
+      <div class="event-card ${ev.rarity==='Godly'?'godly-card':''}">
+        <div class="event-icon">${ev.emoji}</div>
+        <div class="event-name">${ev.name}</div>
+        <span class="tag ${rClass}">${ev.rarity}</span>
+        ${ev.lucky ? `<div><span class="lucky-badge">⭐ ${ev.luckyChance} Lucky · Big Event</span></div>` : ''}
+        <div class="event-desc">${ev.desc}</div>
+        <div class="event-price">${priceStr}</div>
+        <button class="${btnClass}" onclick="buyEvent('${ev.id}','${ev.emoji}',${cost},'${ev.name}')">${isFree?'🆓 Summon Free':'Summon Event'}</button>
+      </div>`;
+  }).join('');
+}
+
+// ── BUY SHOP ITEM ──────────────────────────────────────
+function buyItem(name, emoji, price) {
+  if (coins < price) { showToast('Not enough BloxCoins! 💸','#f87171','#3d1a1a'); return; }
+  coins -= price;
+  persistCoins();
+  updateCoins();
+  addNotif(currentUser || 'Guest', name, emoji, price);
+  showToast(`Purchased ${name}! 🎉`,'#4ade80','#0f2e1a');
+}
+
+// ── BUY EVENT ──────────────────────────────────────────
+function buyEvent(id, emoji, cost, name) {
+  if (coins < cost) { showToast('Not enough BloxCoins! 💸','#f87171','#3d1a1a'); return; }
+  coins -= cost;
+  persistCoins();
+  updateCoins();
+  addNotif(currentUser || 'Guest', name, emoji, cost);
+  if (id === 'randomevent') {
+    const lucky = Math.random() < 0.45;
+    showToast(lucky ? `🎉 BIG EVENT triggered! You summoned ${name}!` : `Event summoned: ${name}! 🎲`,
+              lucky ? '#f7c948' : '#c084fc', lucky ? '#1a1c2e' : '#1a0030');
+  } else {
+    showToast(`Event summoned: ${name}! ⚡`,'#f7c948','#1a1c2e');
+  }
+}
+
+// ── FILTER ─────────────────────────────────────────────
+function filterItems(cat, el) {
+  current = cat;
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  renderItems();
+}
+
+// ── ADMIN ──────────────────────────────────────────────
+function toggleAdminPanel() {
+  const panel = document.getElementById('adminPanel');
+  panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
+}
+
+function checkAdmin() {
+  const pass = document.getElementById('adminPass').value;
+  if (pass !== ADMIN_PASSWORD) { document.getElementById('wrongPass').style.display = 'block'; return; }
+  document.getElementById('adminLockSection').style.display = 'none';
+  document.getElementById('adminAward').style.display = 'block';
+  isLeader = true;
+  renderEvents();
+  flashWelcome('🔐','Welcome, Owner Lambos 👑','Admin panel is now unlocked.', 2500);
+}
+
+function awardCoins() {
+  const player = document.getElementById('playerName').value.trim();
+  const amount = parseInt(document.getElementById('awardAmount').value);
+  if (!player) { showToast('Enter a player name!','#f87171','#3d1a1a'); return; }
+  if (!amount || amount < 1) { showToast('Enter a valid amount!','#f87171','#3d1a1a'); return; }
+  const playerKey   = saveKey(player);
+  const current_val = parseInt(localStorage.getItem(playerKey) || DEFAULT_COINS, 10);
+  const newVal      = current_val + amount;
+  localStorage.setItem(playerKey, newVal);
+  if (currentUser && currentUser.toLowerCase() === player.toLowerCase()) { coins = newVal; updateCoins(); }
+  showToast(`Awarded ${amount} BloxCoins to ${player}! (Total: ${newVal}) 🪙`,'#f7c948','#1a1c2e');
+  document.getElementById('playerName').value  = '';
+  document.getElementById('awardAmount').value = '';
+}
+
+// ── LOGIN ──────────────────────────────────────────────
+function updateHint() {}
+
+function doLogin() {
+  const user = document.getElementById('loginUser').value;
+  const pass = document.getElementById('loginPass').value;
+  const err  = document.getElementById('loginErr');
+  err.style.display = 'none';
+  if (!user) { err.textContent = '❌ Please select a user first!'; err.style.display='block'; return; }
+  if (pass !== users[user]) { err.style.display = 'block'; return; }
+  currentUser = user;
+  coins = loadCoins(user);
+  updateCoins();
+  // load existing unread count from saved notifs so badge is accurate on re-login
+  renderNotifList();
+  flashWelcome('🎉', `Welcome, ${user}!`, `Your BloxCoins: ${coins.toLocaleString()} B`, 2000, () => {
+    document.getElementById('loginScreen').style.display = 'none';
+  });
+}
+
+// ── WELCOME FLASH ──────────────────────────────────────
+function flashWelcome(emoji, title, sub, duration, callback) {
+  const ov = document.getElementById('welcomeOverlay');
+  document.getElementById('welcomeEmoji').textContent = emoji;
+  document.getElementById('welcomeName').textContent  = title;
+  document.getElementById('welcomeSub').textContent   = sub;
+  ov.classList.add('show');
+  setTimeout(() => { ov.classList.remove('show'); if (callback) callback(); }, duration);
+}
+
+// ── HELPERS ────────────────────────────────────────────
+function updateCoins() {
+  document.getElementById('coinCount').textContent = coins.toLocaleString();
+}
+
+function showToast(msg, bg, color) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.style.background = bg; t.style.color = color;
+  t.style.display = 'block';
+  setTimeout(() => t.style.display='none', 2800);
+}
+
+// ── INIT ───────────────────────────────────────────────
+renderItems();
+renderEvents();
+updateCoins();
+renderNotifList();
+</script>
+</body>
+</html>
